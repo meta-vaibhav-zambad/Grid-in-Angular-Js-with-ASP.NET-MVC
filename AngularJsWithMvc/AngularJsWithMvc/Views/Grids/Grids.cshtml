@@ -26,7 +26,7 @@
             &nbsp; &nbsp;
             <input type="submit" value="Clear All" ng-click="clearAll()" />
             &nbsp;&nbsp;
-            <input type="submit" value="Get Selected Rows" ng-click="getSelectedRows()"/>
+            <input type="submit" value="Get Selected Rows" ng-click="getSelectedRows()" />
             &nbsp;&nbsp;
             <input type="submit" value="Save Column State" ng-click="saveColumnState()" />
             &nbsp;&nbsp;
@@ -35,12 +35,12 @@
         <br />
         <div id="grid1" ui-grid="gridOptions" ui-grid-pagination ui-grid-selection
              ui-grid-auto-resize ui-grid-exporter ui-grid-grouping ui-grid-move-columns ui-grid-save-state class="grid"></div>
-        <br/>
+        <br />
         <div>
             <h3>Selected Rows: </h3>
             <label ng-repeat="item in selectedIdFromServer">
-                <br/>
-                Id: 
+                <br />
+                Id:
                 <label for="{{item}}">{{item}}</label>
             </label>
         </div>

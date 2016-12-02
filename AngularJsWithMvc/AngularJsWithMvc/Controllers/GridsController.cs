@@ -58,8 +58,6 @@ namespace AngularJsWithMvc.Controllers
             return View(grid);
         }
 
-
-
         // GET: Grids/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -120,6 +118,7 @@ namespace AngularJsWithMvc.Controllers
         public ActionResult Grids() {
             return View();
         }
+
 
         public JsonResult GetGridCustomizationValues() {
             var customvalues = db.Grids.ToList();

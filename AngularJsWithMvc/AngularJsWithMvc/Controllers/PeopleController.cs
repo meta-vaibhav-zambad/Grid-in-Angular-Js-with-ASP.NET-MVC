@@ -58,13 +58,9 @@ namespace AngularJsWithMvc.Controllers
             return View(person);
         }
 
-        [HttpPost]
-        public JsonResult SelectedPeople(string[] id) {
-            return Json(id, JsonRequestBehavior.AllowGet);
-        }
-
         // GET: People/Edit/5
-        public ActionResult Edit(int? id) {
+        public ActionResult Edit(int? id)
+        {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -117,6 +113,11 @@ namespace AngularJsWithMvc.Controllers
             db.Persons.Remove(person);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public JsonResult SelectedPeople(string[] id) {
+            return Json(id, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetPeople() {

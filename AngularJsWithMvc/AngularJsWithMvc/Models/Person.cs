@@ -11,7 +11,7 @@ namespace AngularJsWithMvc.Models {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Company { get; set; }
-        public bool Employed { get; set; }
+        public string Employed { get; set; }
         public int Age { get; set; }
     }
 }
