@@ -2,14 +2,49 @@
 
 app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$interval', 'uiGridGroupingConstants','$timeout' ,'$window', function ($scope, $http,$filter, uiGridConstants ,$interval, uiGridGroupingConstants,$timeout,$window) {
     
+
     $scope.myDefs = [
-            {"name":"ID","visible":false,"width":"5%","enableFiltering":true,"sort":{} },
-            { "name": "FirstName", "visible": true, "width": "16%","enableFiltering":true,"sort": {} },
-            { "name": "LastName", "visible": true, "width": "16%","enableFiltering":true,"sort": {} },
-            { "name": "Age", "visible": true, "width": "10%","enableFiltering": true,"sort": {} },
-            { "name": "Employed", "visible": true, "width": "20%","enableFiltering": true,"sort": {} },
-            { "name": "Company", "visible": true, "width": "16%","enableFiltering": true,"sort": {} }
-        ]
+            {"shown":false,"name":"ID","visible":false,"width":"5%","enableFiltering":true,"sort":{} },
+            { "name": "FirstName",menuItems:[],"visible": true, "width": "16%","enableFiltering":true,"sort": {} },
+            { "name": "LastName",menuItems:[],"visible": true, "width": "16%","enableFiltering":true,"sort": {} },
+            { "name": "Age",menuItems:[],"visible": true, "width": "10%","enableFiltering": true,"sort": {} },
+            { "name": "Employed",menuItems:[],"visible": true, "width": "20%","enableFiltering": true,"sort": {} },
+            { "name": "Company",menuItems:[],"visible": true, "width": "16%","enableFiltering": true,"sort": {} }
+    ]
+
+    $scope.assignMenuItems = function () {
+
+        angular.forEach($scope.gridOptions.columnDefs, function (value1, index1) {
+            angular.forEach($scope.gridOptions.data, function (value2, index2) {
+                if (index1 > 0) {
+                    console.log(index1);
+                    $scope.gridOptions.columnDefs[index1].menuItems.push({ title: 'Custom'});
+                }
+            });
+        });
+
+        angular.forEach($scope.gridOptions.columnDefs, function (value1, index1) {
+
+            var colName = $scope.gridOptions.columnDefs[index1].name;
+            var indexForData = 0;
+            var indexForMenu = 0;
+
+            if ($scope.gridOptions.columnDefs[index1].name != "ID") {
+
+                while ($scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title != 'Custom') {
+                    indexForMenu++;
+                }
+
+                while ($scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title === 'Custom') {
+                    $scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title = $scope.gridOptions.data[indexForData][colName];
+                    indexForData++;
+                    indexForMenu++;
+                    if (indexForData >= $scope.gridOptions.data.length)
+                        break;
+                }
+            }
+        });
+    };
 
     $scope.gridOptions = {
 
@@ -24,6 +59,7 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
         enableColumnResize: true,
         enableColumnReordering: true,
         enableSorting: true,
+        enableScrollbars: true,
         columnDefs:$scope.myDefs,
         onRegisterApi: function (gridApi) {
 
@@ -53,6 +89,37 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
                             $scope.gridOptions.columnDefs.push($scope.tempObject2);
                         }
                     });
+
+                    angular.forEach($scope.gridOptions.columnDefs, function (value1, index1) {
+                        angular.forEach($scope.gridOptions.data, function (value2, index2) {
+                            if (index1 > 0) {
+                                $scope.gridOptions.columnDefs[index1].menuItems.push({ title: 'Custom' });
+                                //console.log($scope.gridOptions.columnDefs[index1].menuItems);
+                            }
+                        });
+                    });
+                    //console.log($scope.gridOptions.columnDefs[0].menuItems[0]);
+                    angular.forEach($scope.gridOptions.columnDefs, function (value1, index1) {
+
+                        var colName = $scope.gridOptions.columnDefs[index1].name;
+                        var indexForData = 0;
+                        var indexForMenu = 0;
+
+                        if ($scope.gridOptions.columnDefs[index1].name != "ID") {
+
+                            while ($scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title != 'Custom') {
+                                indexForMenu++;
+                            }
+
+                            while ($scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title === 'Custom') {
+                                $scope.gridOptions.columnDefs[index1].menuItems[indexForMenu].title = $scope.gridOptions.data[indexForData][colName];
+                                indexForData++;
+                                indexForMenu++;
+                                if (indexForData >= $scope.gridOptions.data.length)
+                                    break;
+                            }
+                        }
+                    });
                     //angular.forEach($scope.gridOptions.columnDefs, function (value, index) {
 
                     //    $scope.gridOptions.columnDefs[index].enableFiltering = true;
@@ -73,7 +140,6 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
                     if ($scope.defaultBehaviour[0]) {
                         if ($scope.defaultBehaviour[0].GroupBy) {
                             var indexToCheck = $scope.columnArrayForGroupBy.indexOf($scope.defaultBehaviour[0].GroupBy);
-                            console.log(indexToCheck);
                             if (indexToCheck >= 0) {
                                 $scope.gridApi.grouping.groupColumn($scope.defaultBehaviour[0].GroupBy);
                                 $scope.columnNames[indexToCheck].checked = true;
@@ -84,7 +150,6 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
                             var indexToSort = $scope.columnArrayForSort.indexOf($scope.defaultBehaviour[0].SortBy);
                             if (indexToSort >= 0) {
                                 $scope.gridApi.grid.sortColumn($scope.gridOptions.columnDefs[indexToSort], $scope.defaultBehaviour[0].Direction, true);
-                                console.log(indexToSort);
                             }
                         }
                     }
@@ -119,7 +184,6 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
         //    { "name": "Company", "visible": true, "width": "16%", "sort": {} }
         //]
     };
-
 
     $scope.clearAll = function () {
         $scope.gridApi.grouping.clearGrouping();
@@ -168,6 +232,7 @@ app.controller('MainCtrl', ['$scope','$http','$filter','uiGridConstants', '$inte
         $scope.columnState = "";
         angular.forEach($scope.state.columns, function (value, index) {
             $scope.state.columns[index].sort = {};
+            $scope.state.columns[index].menuItems = [];
             //delete $scope.state.columns[index].filters;
             $scope.columnState += angular.toJson($scope.state.columns[index])+",";
         });
